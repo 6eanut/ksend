@@ -67,16 +67,23 @@ for e in sorted(email_set):
 
 print("\nGenerated command:\n")
 
-cmd = ["git", "send-email"]
+cmd_parts = ["git", "send-email"]
 
-cmd += [str(p) for p in patches]
+cmd_parts += [str(p) for p in patches]
 
 for e in sorted(list_set):
-    cmd.append("--to")
-    cmd.append(e)
+    cmd_parts.append("--to")
+    cmd_parts.append(e)
 
 for e in sorted(email_set):
-    cmd.append("--cc")
-    cmd.append(e)
+    cmd_parts.append("--cc")
+    cmd_parts.append(e)
 
-print(" \\\n  ".join(cmd))
+
+def shell_quote(s):
+    if ' ' in s or '<' in s or '>' in s:
+        return f'"{s}"'
+    return s
+
+
+print(" \\\n  ".join(shell_quote(arg) for arg in cmd_parts))
